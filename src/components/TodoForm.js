@@ -5,14 +5,27 @@ import { Button } from './Button';
 export function TodoForm() {
     const [newTodoValue, setNewTodoValue] = useState('');
     const [newTodoCategory, setNewTodoCategory] = useState('');
+    const [valueControl, setValueControl] = useState(true);
+    const [catControl, setCatControl] = useState(true);
 
     const { categories, addTodo, setOpenModal } = useContext(TodoContext);
 
+
     const onAdd = e => {
         e.preventDefault();
-        addTodo(newTodoValue, newTodoCategory);
-        setOpenModal(false);
+        const newValueControl = (newTodoValue !== '') ? true : false;
+        setValueControl(newValueControl)
+        const newCatControl = (newTodoCategory !== '') ? true : false;
+        setCatControl(newCatControl)
+
+        if (newValueControl && newCatControl){
+            addTodo(newTodoValue, newTodoCategory);
+            setOpenModal(false);
+        }else{
+            return false;
+        }
     }
+
 
     const onChangeInput = e => {
         setNewTodoValue(e.target.value)
@@ -24,16 +37,16 @@ export function TodoForm() {
 
     return (
         <form onSubmit={onAdd} className='flex flex-col gap-5 '>
-            <input className='border-b-[1px] border-gray-400 pb-2'
+            <input className={`border-b-[1px] ${!!valueControl ? 'border-gray-400' : 'border-red-600'} pb-2`}
             placeholder='¿Qué hay que hacer?' type={'text'}
             value={newTodoValue}
             onChange={onChangeInput}
             />
-            <select className='border-b-[1px] border-gray-400 pb-2'
+            <select className={`border-b-[1px] ${!!catControl ? 'border-gray-400' : 'border-red-600'} pb-2`}
             onChange={onChangeSelect}
             value={newTodoCategory}
             >
-                <option>[Categoria]</option>
+                <option value="">[Categoria]</option>
                 {categories.map((cat) =>
                     <option key={cat.name} value={cat.name}>{cat.name}</option>
                 )}
