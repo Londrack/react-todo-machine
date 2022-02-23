@@ -5,23 +5,21 @@ export function useLocalStorage(itemName, initialValue){
   const [item, setItem] = useState(initialValue);
 
     useEffect(() => {
-      setTimeout(() => {
-        try{
-          const localStorageItem = localStorage.getItem(itemName);
-          let parsedItems = initialValue;
+      try{
+        const localStorageItem = localStorage.getItem(itemName);
+        let parsedItems = initialValue;
 
-          if (!localStorageItem){
-            localStorage.setItem(itemName, JSON.stringify(initialValue))
-          }else{
-            parsedItems = JSON.parse(localStorageItem);
-          }
-
-          setItem(parsedItems);
-          setDataStatus({...dataStatus, loading: false});
-        }catch (error){
-          setDataStatus({...dataStatus, error: true});
+        if (!localStorageItem){
+          localStorage.setItem(itemName, JSON.stringify(initialValue))
+        }else{
+          parsedItems = JSON.parse(localStorageItem);
         }
-      }, 1000);
+
+        setItem(parsedItems);
+        setDataStatus({...dataStatus, loading: false});
+      }catch (error){
+        setDataStatus({...dataStatus, error: true});
+      };
     }, [])
 
     const saveItem = newItem => {
